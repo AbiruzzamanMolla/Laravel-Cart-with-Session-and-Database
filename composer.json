@@ -2,6 +2,7 @@
     "name": "azmolla/laravelcart",
     "description": "Laravel Shopping cart",
     "keywords": ["laravel", "shoppingcart", "cart"],
+    "homepage": "https://github.com/AbiruzzamanMolla/Laravel-Cart-with-Session-and-Database",
     "license": "MIT",
     "version": "1.0.0",
     "authors": [
@@ -15,7 +16,9 @@
         },
         {
             "name": "Abiruzzaman Molla",
-            "email": "abiruzzaman.molla@gmail.com"
+            "email": "abiruzzaman.molla@gmail.com",
+            "homepage": "http://bornback.top/",
+            "role": "Backend Developer"
         }
     ],
     "require": {
