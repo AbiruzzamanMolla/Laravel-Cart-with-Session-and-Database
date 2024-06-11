@@ -8,9 +8,8 @@ Install the package through [Composer](http://getcomposer.org/).
 
 Run the Composer require command from the Terminal:
 
-    ```
 	composer require azmolla/laravelcart
-	```
+
 
 ### Laravel <= 7.0
 
