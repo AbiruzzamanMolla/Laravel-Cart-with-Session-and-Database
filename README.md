@@ -386,6 +386,13 @@ If you want to retrieve the cart from the database and restore it, all you have 
     // To restore a cart instance named 'wishlist'
     Cart::instance('wishlist')->restore('username');
 
+If you want to retrieve the cart from the database and restore with deleting it from database, all you have to do is call the  `restoreAndDelete($identifier)` where `$identifier` is the key you specified for the `store` method.
+
+    Cart::restoreAndDelete('username');
+
+    // To restore and delete a cart instance named 'wishlist'
+    Cart::instance('wishlist')->restoreAndDelete('username');
+
 ### Deleting the cart
 if you want to delete the cart from the database, all you have to do is calling the `deleteFromDatabase($identifier)` where `$identifier` is the key you specified for the `store` method.
 
