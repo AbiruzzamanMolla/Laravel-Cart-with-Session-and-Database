@@ -227,7 +227,7 @@ class Cart
     {
         $content = $this->getContent();
 
-        if ( ! $content->has($rowId))
+        if (!$content->has($rowId))
             throw new InvalidRowIDException("The cart does not contain rowId {$rowId}.");
 
         return $content->get($rowId);
@@ -354,7 +354,7 @@ class Cart
      */
     public function associate($rowId, $model)
     {
-        if(is_string($model) && ! class_exists($model)) {
+        if (is_string($model) && !class_exists($model)) {
             throw new UnknownModelException("The supplied model {$model} does not exist.");
         }
 
@@ -418,7 +418,49 @@ class Cart
         ]);
 
         $this->events->dispatch('cart.stored');
+    }
 
+    /**
+     * Store an the current instance of the cart.
+     *
+     * @param mixed $identifier
+     * @return void
+     */
+    public function storeOrUpdate($identifier)
+    {
+        $content = $this->getContent();
+
+        if ($identifier instanceof InstanceIdentifier) {
+            $identifier = $identifier->getInstanceIdentifier();
+        }
+
+        $instance = $this->currentInstance();
+
+        if ($this->storedCartInstanceWithIdentifierExists($instance, $identifier)) {
+            $this->getConnection()
+                ->table($this->getTableName())
+                ->where(['identifier' => $identifier, 'instance' => $instance])
+                ->update([
+                    'content'    => serialize($content),
+                    'updated_at' => Carbon::now(),
+                ]);
+
+            $this->events->dispatch('cart.stored');
+
+            return;
+        }
+
+        $this->getConnection()->table($this->getTableName())->insert([
+            'identifier' => $identifier,
+            'instance'   => $instance,
+            'content'    => serialize($content),
+            'created_at' => $this->createdAt ?: Carbon::now(),
+            'updated_at' => Carbon::now(),
+        ]);
+
+        $this->events->dispatch('cart.stored');
+
+        return;
     }
 
     /**
@@ -428,7 +470,7 @@ class Cart
      */
     private function storedCartInstanceWithIdentifierExists($instance, $identifier)
     {
-        return $this->getConnection()->table($this->getTableName())->where(['identifier' => $identifier, 'instance'=> $instance])->exists();
+        return $this->getConnection()->table($this->getTableName())->where(['identifier' => $identifier, 'instance' => $instance])->exists();
     }
 
 
@@ -451,7 +493,48 @@ class Cart
         }
 
         $stored = $this->getConnection()->table($this->getTableName())
-            ->where(['identifier'=> $identifier, 'instance' => $currentInstance])->first();
+            ->where(['identifier' => $identifier, 'instance' => $currentInstance])->first();
+
+        $storedContent = unserialize(data_get($stored, 'content'));
+
+        $this->instance(data_get($stored, 'instance'));
+
+        $content = $this->getContent();
+
+        foreach ($storedContent as $cartItem) {
+            $content->put($cartItem->rowId, $cartItem);
+        }
+
+        $this->events->dispatch('cart.restored');
+
+        $this->session->put($this->instance, $content);
+
+        $this->instance($currentInstance);
+
+        $this->createdAt = Carbon::parse(data_get($stored, 'created_at'));
+        $this->updatedAt = Carbon::parse(data_get($stored, 'updated_at'));
+    }
+
+    /**
+     * Restore the cart with the given identifier.
+     *
+     * @param mixed $identifier
+     * @return void
+     */
+    public function restoreAndDelete($identifier)
+    {
+        if ($identifier instanceof InstanceIdentifier) {
+            $identifier = $identifier->getInstanceIdentifier();
+        }
+
+        $currentInstance = $this->currentInstance();
+
+        if (!$this->storedCartInstanceWithIdentifierExists($currentInstance, $identifier)) {
+            return;
+        }
+
+        $stored = $this->getConnection()->table($this->getTableName())
+            ->where(['identifier' => $identifier, 'instance' => $currentInstance])->first();
 
         $storedContent = unserialize(data_get($stored, 'content'));
 
@@ -473,8 +556,31 @@ class Cart
         $this->updatedAt = Carbon::parse(data_get($stored, 'updated_at'));
 
         $this->getConnection()->table($this->getTableName())->where(['identifier' => $identifier, 'instance' => $currentInstance])->delete();
-
+        return;
     }
+
+    /**
+     * Restore the cart with the given identifier.
+     *
+     * @param mixed $identifier
+     * @return bool
+     */
+
+    public function deleteFromDatabase($identifier)
+    {
+        if ($identifier instanceof InstanceIdentifier) {
+            $identifier = $identifier->getInstanceIdentifier();
+        }
+
+        $currentInstance = $this->currentInstance();
+
+        if (!$this->storedCartInstanceWithIdentifierExists($currentInstance, $identifier)) {
+            return false;
+        }
+
+        return $this->getConnection()->table($this->getTableName())->where(['identifier' => $identifier, 'instance' => $currentInstance])->delete();
+    }
+
 
     /**
      * Merges the contents of another cart into this cart.
@@ -493,7 +599,7 @@ class Cart
         }
 
         $stored = $this->getConnection()->table($this->getTableName())
-            ->where(['identifier'=> $identifier, 'instance'=> $instance])->first();
+            ->where(['identifier' => $identifier, 'instance' => $instance])->first();
 
         $storedContent = unserialize($stored->content);
 
@@ -551,15 +657,15 @@ class Cart
      */
     public function __get($attribute)
     {
-        if($attribute === 'total') {
+        if ($attribute === 'total') {
             return $this->total();
         }
 
-        if($attribute === 'tax') {
+        if ($attribute === 'tax') {
             return $this->tax();
         }
 
-        if($attribute === 'subtotal') {
+        if ($attribute === 'subtotal') {
             return $this->subtotal();
         }
 
@@ -617,7 +723,7 @@ class Cart
      */
     private function isMulti($item)
     {
-        if ( ! is_array($item)) return false;
+        if (!is_array($item)) return false;
 
         return is_array(head($item)) || head($item) instanceof Buyable;
     }
