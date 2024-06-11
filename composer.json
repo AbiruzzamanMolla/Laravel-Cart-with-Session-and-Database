@@ -4,7 +4,6 @@
     "keywords": ["laravel", "shoppingcart", "cart"],
     "homepage": "https://github.com/AbiruzzamanMolla/Laravel-Cart-with-Session-and-Database",
     "license": "MIT",
-    "version": "1.0.1",
     "authors": [
         {
             "name": "Rob Gloudemans",
