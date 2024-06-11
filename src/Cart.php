@@ -1,6 +1,6 @@
 <?php
 
-namespace Gloudemans\Shoppingcart;
+namespace Azmolla\Shoppingcart;
 
 use Carbon\Carbon;
 use Closure;
@@ -9,10 +9,10 @@ use Illuminate\Support\Collection;
 use Illuminate\Session\SessionManager;
 use Illuminate\Database\DatabaseManager;
 use Illuminate\Contracts\Events\Dispatcher;
-use Gloudemans\Shoppingcart\Contracts\Buyable;
-use Gloudemans\Shoppingcart\Exceptions\UnknownModelException;
-use Gloudemans\Shoppingcart\Exceptions\InvalidRowIDException;
-use Gloudemans\Shoppingcart\Exceptions\CartAlreadyStoredException;
+use Azmolla\Shoppingcart\Contracts\Buyable;
+use Azmolla\Shoppingcart\Exceptions\UnknownModelException;
+use Azmolla\Shoppingcart\Exceptions\InvalidRowIDException;
+use Azmolla\Shoppingcart\Exceptions\CartAlreadyStoredException;
 
 class Cart
 {
@@ -615,12 +615,12 @@ class Cart
     /**
      * Add an item to the cart.
      *
-     * @param \Gloudemans\Shoppingcart\CartItem $item          Item to add to the Cart
+     * @param \Azmolla\Shoppingcart\CartItem $item          Item to add to the Cart
      * @param bool                              $keepDiscount  Keep the discount rate of the Item
      * @param bool                              $keepTax       Keep the Tax rate of the Item
      * @param bool                              $dispatchEvent
      *
-     * @return \Gloudemans\Shoppingcart\CartItem The CartItem
+     * @return \Azmolla\Shoppingcart\CartItem The CartItem
      */
     public function addCartItem($item, $keepTax = false, $dispatchEvent = true)
     {

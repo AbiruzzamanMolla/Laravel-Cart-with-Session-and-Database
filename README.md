@@ -1,6 +1,6 @@
 ## LaravelShoppingcart
 
-A simple shopping cart implementation for Laravel 7 & 8 & 9 10 & 11.
+A simple shopping cart implementation for Laravel 7, 8, 9, 10 & 11.
 
 ## Installation
 
@@ -17,11 +17,11 @@ Should you still be on version 7.0 of Laravel, the final steps for you are to ad
 
 Add a new line to the `providers` array:
 
-	Gloudemans\Shoppingcart\ShoppingcartServiceProvider::class
+	Azmolla\Shoppingcart\ShoppingcartServiceProvider::class
 
 And optionally add a new line to the `aliases` array:
 
-	'Cart' => Gloudemans\Shoppingcart\Facades\Cart::class,
+	'Cart' => Azmolla\Shoppingcart\Facades\Cart::class,
 
 Now you're ready to start using the shopping cart in your application.
 
@@ -352,13 +352,13 @@ To save cart into the database so you can retrieve it later, the package needs t
 By default the package will use the default database connection and use a table named `shopping_cart`.
 If you want to change these options, you'll have to publish the `config` file.
 
-    php artisan vendor:publish --provider="Gloudemans\Shoppingcart\ShoppingcartServiceProvider" --tag="config"
+    php artisan vendor:publish --provider="Azmolla\Shoppingcart\ShoppingcartServiceProvider" --tag="config"
 
 This will give you a `cart.php` config file in which you can make the changes.
 
 To make your life easy, the package also includes a ready to use `migration` which you can publish by running:
 
-    php artisan vendor:publish --provider="Gloudemans\Shoppingcart\ShoppingcartServiceProvider" --tag="migrations"
+    php artisan vendor:publish --provider="Azmolla\Shoppingcart\ShoppingcartServiceProvider" --tag="migrations"
 
 This will place a `shopping_cart` table's migration file into `database/migrations` directory. Now all you have to do is run `php artisan migrate` to migrate your database.
 
@@ -480,12 +480,12 @@ Cart::addCost('somethingelse', 1.11);
 		<tr>
 			<td colspan="2">&nbsp;</td>
 			<td>Transaction cost</td>
-			<td><?php echo Cart::getCost(\Gloudemans\Shoppingcart\Cart::COST_TRANSACTION); ?></td>
+			<td><?php echo Cart::getCost(\Azmolla\Shoppingcart\Cart::COST_TRANSACTION); ?></td>
 		</tr>
 		<tr>
 			<td colspan="2">&nbsp;</td>
 			<td>Transaction cost</td>
-			<td><?php echo Cart::getCost(\Gloudemans\Shoppingcart\Cart::COST_SHIPPING); ?></td>
+			<td><?php echo Cart::getCost(\Azmolla\Shoppingcart\Cart::COST_SHIPPING); ?></td>
 		</tr>
 		<tr>
 			<td colspan="2">&nbsp;</td>

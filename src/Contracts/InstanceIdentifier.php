@@ -1,7 +1,7 @@
 <?php
 
 
-namespace Gloudemans\Shoppingcart\Contracts;
+namespace Azmolla\Shoppingcart\Contracts;
 
 interface InstanceIdentifier
 {

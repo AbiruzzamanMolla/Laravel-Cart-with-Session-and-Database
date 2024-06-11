@@ -1,6 +1,6 @@
 <?php
 
-namespace Gloudemans\Shoppingcart;
+namespace Azmolla\Shoppingcart;
 
 use Illuminate\Auth\Events\Logout;
 use Illuminate\Session\SessionManager;
@@ -16,7 +16,7 @@ class ShoppingcartServiceProvider extends ServiceProvider
      */
     public function register()
     {
-        $this->app->bind('cart', 'Gloudemans\Shoppingcart\Cart');
+        $this->app->bind('cart', 'Azmolla\Shoppingcart\Cart');
 
         $config = __DIR__ . '/../config/cart.php';
         $this->mergeConfigFrom($config, 'cart');
