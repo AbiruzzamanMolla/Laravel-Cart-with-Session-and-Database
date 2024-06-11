@@ -1,6 +1,6 @@
 ## LaravelShoppingcart
 
-A simple shopping cart implementation for Laravel 7 & 8 & 9 & 10.
+A simple shopping cart implementation for Laravel 7 & 8 & 9 10 & 11.
 
 ## Installation
 
@@ -8,7 +8,9 @@ Install the package through [Composer](http://getcomposer.org/).
 
 Run the Composer require command from the Terminal:
 
-    composer require mindscms/laravelshoppingcart
+    ```
+	composer require abir/laravelcart
+	```
 
 ### Laravel <= 7.0
 
@@ -342,7 +344,9 @@ foreach(Cart::content() as $row) {
 
 - [Config](#configuration)
 - [Storing the cart](#save-cart-to-database)
+- [Merging the cart](#merge-cart-to-database)
 - [Restoring the cart](#retrieve-cart-from-database)
+- [Deleting the cart](#delete-cart-from-database)
 
 ### Configuration
 To save cart into the database so you can retrieve it later, the package needs to know which database connection to use and what the name of the table is.
@@ -367,6 +371,13 @@ To store your cart instance into the database, you have to call the `store($iden
     // To store a cart instance named 'wishlist'
     Cart::instance('wishlist')->store('username');
 
+### Merging the cart
+If you want to merge the cart from the database, all you have to do is calling the  `merge($identifier)` where `$identifier` is the key you specified for the `store` method.
+    Cart::merge('username');
+
+    // To merge a cart instance named 'wishlist'
+    Cart::instance('wishlist')->merge('username');
+
 ### Restoring the cart
 If you want to retrieve the cart from the database and restore it, all you have to do is call the  `restore($identifier)` where `$identifier` is the key you specified for the `store` method.
 
@@ -374,6 +385,14 @@ If you want to retrieve the cart from the database and restore it, all you have 
 
     // To restore a cart instance named 'wishlist'
     Cart::instance('wishlist')->restore('username');
+
+### Deleting the cart
+if you want to delete the cart from the database, all you have to do is calling the `deleteFromDatabase($identifier)` where `$identifier` is the key you specified for the `store` method.
+
+	Cart::deleteFromDatabase('username');
+
+    // To delete a cart instance named 'wishlist'
+    Cart::instance('wishlist')->deleteFromDatabase('username');
 
 ## Exceptions
 
