@@ -3,6 +3,7 @@
     "description": "Laravel Shopping cart",
     "keywords": ["laravel", "shoppingcart", "cart"],
     "license": "MIT",
+    "version": "1.0.0",
     "authors": [
         {
             "name": "Rob Gloudemans",
