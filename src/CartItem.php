@@ -76,13 +76,13 @@ class CartItem implements Arrayable, Jsonable
      */
     public function __construct($id, $name, $price, array $options = [])
     {
-        if(empty($id)) {
+        if (empty($id)) {
             throw new \InvalidArgumentException('Please supply a valid identifier.');
         }
-        if(empty($name)) {
+        if (empty($name)) {
             throw new \InvalidArgumentException('Please supply a valid name.');
         }
-        if(strlen($price) < 0 || ! is_numeric($price)) {
+        if (strlen($price) < 0 || !is_numeric($price)) {
             throw new \InvalidArgumentException('Please supply a valid price.');
         }
 
@@ -180,7 +180,7 @@ class CartItem implements Arrayable, Jsonable
      */
     public function setQuantity($qty)
     {
-        if(empty($qty) || ! is_numeric($qty))
+        if (empty($qty) || !is_numeric($qty))
             throw new \InvalidArgumentException('Please supply a valid quantity.');
 
         $this->qty = $qty;
@@ -252,32 +252,38 @@ class CartItem implements Arrayable, Jsonable
      */
     public function __get($attribute)
     {
-        if(property_exists($this, $attribute)) {
+        if (property_exists($this, $attribute)) {
             return $this->{$attribute};
         }
 
-        if($attribute === 'priceTax') {
+        if ($attribute === 'priceTax') {
             return number_format($this->price + $this->tax, 2, '.', '');
         }
 
-        if($attribute === 'subtotal') {
+        if ($attribute === 'subtotal') {
             return number_format($this->qty * $this->price, 2, '.', '');
         }
 
-        if($attribute === 'total') {
+        if ($attribute === 'total') {
             return number_format($this->qty * $this->priceTax, 2, '.', '');
         }
 
-        if($attribute === 'tax') {
+        if ($attribute === 'tax') {
             return number_format($this->price * ($this->taxRate / 100), 2, '.', '');
         }
 
-        if($attribute === 'taxTotal') {
+        if ($attribute === 'taxTotal') {
             return number_format($this->tax * $this->qty, 2, '.', '');
         }
 
-        if($attribute === 'model' && isset($this->associatedModel)) {
-            return with(new $this->associatedModel)->find($this->id);
+        if ($attribute === 'model' && isset($this->associatedModel)) {
+            if (isset($this->options['model_field'])) {
+                $modelField = $this->options['model_field'];
+
+                return with(new $this->associatedModel)->where($modelField, $this->id)->first();
+            } else {
+                return with(new $this->associatedModel)->find($this->id);
+            }
         }
 
         return null;

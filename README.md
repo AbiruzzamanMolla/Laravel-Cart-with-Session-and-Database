@@ -326,19 +326,31 @@ Here is an example:
 $cartItem = Cart::add('293ad', 'Product 1', 1, 9.99, ['size' => 'large']);
 
 // Next we associate a model with the item.
-Cart::associate($cartItem->rowId, 'Product');
+Cart::associate($cartItem->rowId, Product::class);
 
 // Or even easier, call the associate method on the CartItem!
-$cartItem->associate('Product');
+$cartItem->associate(Product::class);
 
 // You can even make it a one-liner
-Cart::add('293ad', 'Product 1', 1, 9.99, ['size' => 'large'])->associate('Product');
+Cart::add('293ad', 'Product 1', 1, 9.99, ['size' => 'large'])->associate(Product::class);
 
 // Now, when iterating over the content of the cart, you can access the model.
 foreach(Cart::content() as $row) {
 	echo 'You have ' . $row->qty . ' items of ' . $row->model->name . ' with description: "' . $row->model->description . '" in your cart.';
 }
 ```
+
+By default model use find method to get the model instance, but if you want any custom field as relational condition then you can set a new value to the `options` array, named `model_field` where this will return the instance using where condition and the field name. 
+
+```php
+$cartItem = Cart::add('201b84a2-e345-4b6f-934e-dc4d85567a21', 'Product 1', 1, 9.99, ['model_field' => 'uuid'])->associate(Product::class);
+
+foreach(Cart::content() as $row) {
+	echo 'You have ' . $row->qty . ' items of ' . $row->model->name . ' with uuid: "' . $row->model->uuid . '" in your cart.';
+}
+
+```
+
 ## Database
 
 - [Config](#configuration)
@@ -369,6 +381,13 @@ To store your cart instance into the database, you have to call the `store($iden
 
     // To store a cart instance named 'wishlist'
     Cart::instance('wishlist')->store('username');
+
+To store or update(if exist) your cart instance into the database, you have to call the `storeOrUpdate($identifier) ` method. Where `$identifier` is a random key, for instance the id or username of the user.
+
+    Cart::storeOrUpdate('username');
+
+    // To store or update a cart instance named 'wishlist'
+    Cart::instance('wishlist')->storeOrUpdate('username');
 
 ### Merging the cart
 If you want to merge the cart from the database, all you have to do is calling the  `merge($identifier)` where `$identifier` is the key you specified for the `store` method.
