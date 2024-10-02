@@ -2,23 +2,24 @@
 
 namespace Azmolla\Shoppingcart;
 
+use Azmolla\Shoppingcart\Contracts\Buyable;
+use Azmolla\Shoppingcart\Exceptions\CartAlreadyStoredException;
+use Azmolla\Shoppingcart\Exceptions\InvalidRowIDException;
+use Azmolla\Shoppingcart\Exceptions\UnknownModelException;
 use Carbon\Carbon;
 use Closure;
-use Illuminate\Database\Connection;
-use Illuminate\Support\Collection;
-use Illuminate\Session\SessionManager;
-use Illuminate\Database\DatabaseManager;
 use Illuminate\Contracts\Events\Dispatcher;
-use Azmolla\Shoppingcart\Contracts\Buyable;
-use Azmolla\Shoppingcart\Exceptions\UnknownModelException;
-use Azmolla\Shoppingcart\Exceptions\InvalidRowIDException;
-use Azmolla\Shoppingcart\Exceptions\CartAlreadyStoredException;
+use Illuminate\Database\Connection;
+use Illuminate\Database\DatabaseManager;
+use Illuminate\Session\SessionManager;
+use Illuminate\Support\Collection;
 
 class Cart
 {
     const DEFAULT_INSTANCE = 'default';
 
     const COST_SHIPPING = 'shipping';
+
     const COST_TRANSACTION = 'transaction';
 
     /**
@@ -51,15 +52,12 @@ class Cart
 
     /**
      * Cart constructor.
-     *
-     * @param SessionManager $session
-     * @param Dispatcher $events
      */
     public function __construct(SessionManager $session, Dispatcher $events)
     {
         $this->session = $session;
         $this->events = $events;
-        $this->extraCosts = new Collection();
+        $this->extraCosts = new Collection;
 
         $this->instance(self::DEFAULT_INSTANCE);
     }
@@ -67,7 +65,7 @@ class Cart
     /**
      * Set the current cart instance.
      *
-     * @param string|null $instance
+     * @param  string|null  $instance
      * @return Cart
      */
     public function instance($instance = null)
@@ -92,11 +90,10 @@ class Cart
     /**
      * Add an item to the cart.
      *
-     * @param mixed     $id
-     * @param mixed     $name
-     * @param int|float $qty
-     * @param float     $price
-     * @param array     $options
+     * @param  mixed  $id
+     * @param  mixed  $name
+     * @param  int|float  $qty
+     * @param  float  $price
      * @return CartItem
      */
     public function add($id, $name = null, $qty = null, $price = null, array $options = [])
@@ -127,8 +124,9 @@ class Cart
     /**
      * Sets/adds an additional cost on the cart.
      *
-     * @param string $name
-     * @param float $price
+     * @param  string  $name
+     * @param  float  $price
+     *
      * @todo add in session
      */
     public function addCost($name, $price)
@@ -141,10 +139,9 @@ class Cart
     /**
      * Gets an additional cost by name
      *
-     * @param $name
-     * @param int|null $decimals
-     * @param string|null $decimalPoint
-     * @param string|null $thousandSeparator
+     * @param  int|null  $decimals
+     * @param  string|null  $decimalPoint
+     * @param  string|null  $thousandSeparator
      * @return string
      */
     public function getCost($name)
@@ -157,8 +154,8 @@ class Cart
     /**
      * Update the cart item with the given rowId.
      *
-     * @param string $rowId
-     * @param mixed  $qty
+     * @param  string  $rowId
+     * @param  mixed  $qty
      * @return CartItem
      */
     public function update($rowId, $qty)
@@ -186,6 +183,7 @@ class Cart
 
         if ($cartItem->qty <= 0) {
             $this->remove($cartItem->rowId);
+
             return;
         } else {
             $content->put($cartItem->rowId, $cartItem);
@@ -201,7 +199,7 @@ class Cart
     /**
      * Remove the cart item with the given rowId from the cart.
      *
-     * @param string $rowId
+     * @param  string  $rowId
      * @return void
      */
     public function remove($rowId)
@@ -220,15 +218,16 @@ class Cart
     /**
      * Get a cart item from the cart by its rowId.
      *
-     * @param string $rowId
+     * @param  string  $rowId
      * @return CartItem
      */
     public function get($rowId)
     {
         $content = $this->getContent();
 
-        if (!$content->has($rowId))
+        if (! $content->has($rowId)) {
             throw new InvalidRowIDException("The cart does not contain rowId {$rowId}.");
+        }
 
         return $content->get($rowId);
     }
@@ -251,7 +250,7 @@ class Cart
     public function content()
     {
         if (is_null($this->session->get($this->instance))) {
-            return new Collection();
+            return new Collection;
         }
 
         return $this->session->get($this->instance);
@@ -272,9 +271,9 @@ class Cart
     /**
      * Get the total price of the items in the cart.
      *
-     * @param int    $decimals
-     * @param string $decimalPoint
-     * @param string $thousandSeparator
+     * @param  int  $decimals
+     * @param  string  $decimalPoint
+     * @param  string  $thousandSeparator
      * @return string
      */
     public function total()
@@ -297,9 +296,9 @@ class Cart
     /**
      * Get the total tax of the items in the cart.
      *
-     * @param int    $decimals
-     * @param string $decimalPoint
-     * @param string $thousandSeparator
+     * @param  int  $decimals
+     * @param  string  $decimalPoint
+     * @param  string  $thousandSeparator
      * @return float
      */
     public function tax()
@@ -316,9 +315,9 @@ class Cart
     /**
      * Get the subtotal (total - tax) of the items in the cart.
      *
-     * @param int    $decimals
-     * @param string $decimalPoint
-     * @param string $thousandSeparator
+     * @param  int  $decimals
+     * @param  string  $decimalPoint
+     * @param  string  $thousandSeparator
      * @return float
      */
     public function subtotal()
@@ -335,7 +334,6 @@ class Cart
     /**
      * Search the cart content for a cart item matching the given search closure.
      *
-     * @param \Closure $search
      * @return Collection
      */
     public function search(Closure $search)
@@ -348,13 +346,13 @@ class Cart
     /**
      * Associate the cart item with the given rowId with the given model.
      *
-     * @param string $rowId
-     * @param mixed  $model
+     * @param  string  $rowId
+     * @param  mixed  $model
      * @return void
      */
     public function associate($rowId, $model)
     {
-        if (is_string($model) && !class_exists($model)) {
+        if (is_string($model) && ! class_exists($model)) {
             throw new UnknownModelException("The supplied model {$model} does not exist.");
         }
 
@@ -372,8 +370,8 @@ class Cart
     /**
      * Set the tax rate for the cart item with the given rowId.
      *
-     * @param string    $rowId
-     * @param int|float $taxRate
+     * @param  string  $rowId
+     * @param  int|float  $taxRate
      * @return void
      */
     public function setTax($rowId, $taxRate)
@@ -392,7 +390,7 @@ class Cart
     /**
      * Store an the current instance of the cart.
      *
-     * @param mixed $identifier
+     * @param  mixed  $identifier
      * @return void
      */
     public function store($identifier)
@@ -411,8 +409,8 @@ class Cart
 
         $this->getConnection()->table($this->getTableName())->insert([
             'identifier' => $identifier,
-            'instance'   => $instance,
-            'content'    => serialize($content),
+            'instance' => $instance,
+            'content' => serialize($content),
             'created_at' => $this->createdAt ?: Carbon::now(),
             'updated_at' => Carbon::now(),
         ]);
@@ -423,7 +421,7 @@ class Cart
     /**
      * Store an the current instance of the cart.
      *
-     * @param mixed $identifier
+     * @param  mixed  $identifier
      * @return void
      */
     public function storeOrUpdate($identifier)
@@ -441,7 +439,7 @@ class Cart
                 ->table($this->getTableName())
                 ->where(['identifier' => $identifier, 'instance' => $instance])
                 ->update([
-                    'content'    => serialize($content),
+                    'content' => serialize($content),
                     'updated_at' => Carbon::now(),
                 ]);
 
@@ -452,20 +450,17 @@ class Cart
 
         $this->getConnection()->table($this->getTableName())->insert([
             'identifier' => $identifier,
-            'instance'   => $instance,
-            'content'    => serialize($content),
+            'instance' => $instance,
+            'content' => serialize($content),
             'created_at' => $this->createdAt ?: Carbon::now(),
             'updated_at' => Carbon::now(),
         ]);
 
         $this->events->dispatch('cart.stored');
 
-        return;
     }
 
     /**
-     * @param $identifier
-     *
      * @return bool
      */
     private function storedCartInstanceWithIdentifierExists($instance, $identifier)
@@ -473,11 +468,10 @@ class Cart
         return $this->getConnection()->table($this->getTableName())->where(['identifier' => $identifier, 'instance' => $instance])->exists();
     }
 
-
     /**
      * Restore the cart with the given identifier.
      *
-     * @param mixed $identifier
+     * @param  mixed  $identifier
      * @return void
      */
     public function restore($identifier)
@@ -488,7 +482,7 @@ class Cart
 
         $currentInstance = $this->currentInstance();
 
-        if (!$this->storedCartInstanceWithIdentifierExists($currentInstance, $identifier)) {
+        if (! $this->storedCartInstanceWithIdentifierExists($currentInstance, $identifier)) {
             return;
         }
 
@@ -518,7 +512,7 @@ class Cart
     /**
      * Restore the cart with the given identifier.
      *
-     * @param mixed $identifier
+     * @param  mixed  $identifier
      * @return void
      */
     public function restoreAndDelete($identifier)
@@ -529,7 +523,7 @@ class Cart
 
         $currentInstance = $this->currentInstance();
 
-        if (!$this->storedCartInstanceWithIdentifierExists($currentInstance, $identifier)) {
+        if (! $this->storedCartInstanceWithIdentifierExists($currentInstance, $identifier)) {
             return;
         }
 
@@ -556,16 +550,15 @@ class Cart
         $this->updatedAt = Carbon::parse(data_get($stored, 'updated_at'));
 
         $this->getConnection()->table($this->getTableName())->where(['identifier' => $identifier, 'instance' => $currentInstance])->delete();
-        return;
+
     }
 
     /**
      * Restore the cart with the given identifier.
      *
-     * @param mixed $identifier
+     * @param  mixed  $identifier
      * @return bool
      */
-
     public function deleteFromDatabase($identifier)
     {
         if ($identifier instanceof InstanceIdentifier) {
@@ -574,27 +567,25 @@ class Cart
 
         $currentInstance = $this->currentInstance();
 
-        if (!$this->storedCartInstanceWithIdentifierExists($currentInstance, $identifier)) {
+        if (! $this->storedCartInstanceWithIdentifierExists($currentInstance, $identifier)) {
             return false;
         }
 
         return $this->getConnection()->table($this->getTableName())->where(['identifier' => $identifier, 'instance' => $currentInstance])->delete();
     }
 
-
     /**
      * Merges the contents of another cart into this cart.
      *
-     * @param mixed $identifier   Identifier of the Cart to merge with.
-     * @param bool  $keepDiscount Keep the discount of the CartItems.
-     * @param bool  $keepTax      Keep the tax of the CartItems.
-     * @param bool  $dispatchAdd  Flag to dispatch the add events.
-     *
+     * @param  mixed  $identifier  Identifier of the Cart to merge with.
+     * @param  bool  $keepDiscount  Keep the discount of the CartItems.
+     * @param  bool  $keepTax  Keep the tax of the CartItems.
+     * @param  bool  $dispatchAdd  Flag to dispatch the add events.
      * @return bool
      */
     public function merge($identifier, $keepTax = false, $dispatchAdd = true, $instance = self::DEFAULT_INSTANCE)
     {
-        if (!$this->storedCartInstanceWithIdentifierExists($instance, $identifier)) {
+        if (! $this->storedCartInstanceWithIdentifierExists($instance, $identifier)) {
             return false;
         }
 
@@ -615,16 +606,15 @@ class Cart
     /**
      * Add an item to the cart.
      *
-     * @param \Azmolla\Shoppingcart\CartItem $item          Item to add to the Cart
-     * @param bool                              $keepDiscount  Keep the discount rate of the Item
-     * @param bool                              $keepTax       Keep the Tax rate of the Item
-     * @param bool                              $dispatchEvent
-     *
+     * @param  \Azmolla\Shoppingcart\CartItem  $item  Item to add to the Cart
+     * @param  bool  $keepDiscount  Keep the discount rate of the Item
+     * @param  bool  $keepTax  Keep the Tax rate of the Item
+     * @param  bool  $dispatchEvent
      * @return \Azmolla\Shoppingcart\CartItem The CartItem
      */
     public function addCartItem($item, $keepTax = false, $dispatchEvent = true)
     {
-        if (!$keepTax) {
+        if (! $keepTax) {
             $item->setTaxRate($this->taxRate);
         }
 
@@ -652,7 +642,7 @@ class Cart
     /**
      * Magic method to make accessing the total, tax and subtotal properties possible.
      *
-     * @param string $attribute
+     * @param  string  $attribute
      * @return float|null
      */
     public function __get($attribute)
@@ -689,11 +679,10 @@ class Cart
     /**
      * Create a new CartItem from the supplied attributes.
      *
-     * @param mixed     $id
-     * @param mixed     $name
-     * @param int|float $qty
-     * @param float     $price
-     * @param array     $options
+     * @param  mixed  $id
+     * @param  mixed  $name
+     * @param  int|float  $qty
+     * @param  float  $price
      * @return CartItem
      */
     private function createCartItem($id, $name, $qty, $price, array $options)
@@ -718,18 +707,19 @@ class Cart
     /**
      * Check if the item is a multidimensional array or an array of Buyables.
      *
-     * @param mixed $item
+     * @param  mixed  $item
      * @return bool
      */
     private function isMulti($item)
     {
-        if (!is_array($item)) return false;
+        if (! is_array($item)) {
+            return false;
+        }
 
         return is_array(head($item)) || head($item) instanceof Buyable;
     }
 
     /**
-     * @param $identifier
      * @return bool
      */
     private function storedCartWithIdentifierExists($identifier)
@@ -774,10 +764,9 @@ class Cart
     /**
      * Get the Formated number
      *
-     * @param $value
-     * @param $decimals
-     * @param $decimalPoint
-     * @param $thousandSeparator
+     * @param  $decimals
+     * @param  $decimalPoint
+     * @param  $thousandSeparator
      * @return string
      */
     private function numberFormat($value)

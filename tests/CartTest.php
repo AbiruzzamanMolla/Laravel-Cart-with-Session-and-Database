@@ -2,19 +2,19 @@
 
 namespace Azmolla\Tests\Shoppingcart;
 
-use Mockery;
-use PHPUnit\Framework\Assert;
 use Azmolla\Shoppingcart\Cart;
-use Orchestra\Testbench\TestCase;
-use Illuminate\Auth\Events\Logout;
-use Illuminate\Support\Collection;
 use Azmolla\Shoppingcart\CartItem;
-use Illuminate\Support\Facades\Event;
-use Illuminate\Session\SessionManager;
-use Illuminate\Contracts\Auth\Authenticatable;
 use Azmolla\Shoppingcart\ShoppingcartServiceProvider;
-use Azmolla\Tests\Shoppingcart\Fixtures\ProductModel;
 use Azmolla\Tests\Shoppingcart\Fixtures\BuyableProduct;
+use Azmolla\Tests\Shoppingcart\Fixtures\ProductModel;
+use Illuminate\Auth\Events\Logout;
+use Illuminate\Contracts\Auth\Authenticatable;
+use Illuminate\Session\SessionManager;
+use Illuminate\Support\Collection;
+use Illuminate\Support\Facades\Event;
+use Mockery;
+use Orchestra\Testbench\TestCase;
+use PHPUnit\Framework\Assert;
 
 class CartTest extends TestCase
 {
@@ -23,7 +23,7 @@ class CartTest extends TestCase
     /**
      * Set the package service provider.
      *
-     * @param \Illuminate\Foundation\Application $app
+     * @param  \Illuminate\Foundation\Application  $app
      * @return array
      */
     protected function getPackageProviders($app)
@@ -45,9 +45,9 @@ class CartTest extends TestCase
 
         $app['config']->set('database.default', 'testing');
         $app['config']->set('database.connections.testing', [
-            'driver'   => 'sqlite',
+            'driver' => 'sqlite',
             'database' => ':memory:',
-            'prefix'   => '',
+            'prefix' => '',
         ]);
     }
 
@@ -85,7 +85,7 @@ class CartTest extends TestCase
         $this->assertItemsInCart(1, $cart->instance(Cart::DEFAULT_INSTANCE));
         $this->assertItemsInCart(1, $cart->instance('wishlist'));
     }
-    
+
     /** @test */
     public function it_can_add_an_item()
     {
@@ -182,7 +182,7 @@ class CartTest extends TestCase
 
         $cart->add([
             ['id' => 1, 'name' => 'Test item 1', 'qty' => 1, 'price' => 10.00],
-            ['id' => 2, 'name' => 'Test item 2', 'qty' => 1, 'price' => 10.00]
+            ['id' => 2, 'name' => 'Test item 2', 'qty' => 1, 'price' => 10.00],
         ]);
 
         $this->assertEquals(2, $cart->count());
@@ -212,7 +212,9 @@ class CartTest extends TestCase
 
     /**
      * @test
+     *
      * @expectedException \InvalidArgumentException
+     *
      * @expectedExceptionMessage Please supply a valid identifier.
      */
     public function it_will_validate_the_identifier()
@@ -224,7 +226,9 @@ class CartTest extends TestCase
 
     /**
      * @test
+     *
      * @expectedException \InvalidArgumentException
+     *
      * @expectedExceptionMessage Please supply a valid name.
      */
     public function it_will_validate_the_name()
@@ -236,7 +240,9 @@ class CartTest extends TestCase
 
     /**
      * @test
+     *
      * @expectedException \InvalidArgumentException
+     *
      * @expectedExceptionMessage Please supply a valid quantity.
      */
     public function it_will_validate_the_quantity()
@@ -248,7 +254,9 @@ class CartTest extends TestCase
 
     /**
      * @test
+     *
      * @expectedException \InvalidArgumentException
+     *
      * @expectedExceptionMessage Please supply a valid price.
      */
     public function it_will_validate_the_price()
@@ -340,6 +348,7 @@ class CartTest extends TestCase
 
     /**
      * @test
+     *
      * @expectedException \Azmolla\Shoppingcart\Exceptions\InvalidRowIDException
      */
     public function it_will_throw_an_exception_if_a_rowid_was_not_found()
@@ -498,7 +507,7 @@ class CartTest extends TestCase
                 'tax' => 2.10,
                 'subtotal' => 10.0,
                 'options' => [],
-            ]
+            ],
         ], $content->toArray());
     }
 
@@ -620,7 +629,9 @@ class CartTest extends TestCase
 
     /**
      * @test
+     *
      * @expectedException \Azmolla\Shoppingcart\Exceptions\UnknownModelException
+     *
      * @expectedExceptionMessage The supplied model SomeModel does not exist.
      */
     public function it_will_throw_an_exception_when_a_non_existing_model_is_being_associated()
@@ -815,7 +826,9 @@ class CartTest extends TestCase
 
     /**
      * @test
+     *
      * @expectedException \Azmolla\Shoppingcart\Exceptions\CartAlreadyStoredException
+     *
      * @expectedExceptionMessage A cart with identifier 123 was already stored.
      */
     public function it_will_throw_an_exception_when_a_cart_was_already_stored_using_the_specified_identifier()
@@ -931,10 +944,10 @@ class CartTest extends TestCase
 
     /**
      * Set the config number format.
-     * 
-     * @param int    $decimals
-     * @param string $decimalPoint
-     * @param string $thousandSeperator
+     *
+     * @param  int  $decimals
+     * @param  string  $decimalPoint
+     * @param  string  $thousandSeperator
      */
     private function setConfigFormat($decimals, $decimalPoint, $thousandSeperator)
     {

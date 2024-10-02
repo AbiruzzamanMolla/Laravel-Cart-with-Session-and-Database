@@ -24,9 +24,9 @@ class BuyableProduct implements Buyable
     /**
      * BuyableProduct constructor.
      *
-     * @param int|string $id
-     * @param string     $name
-     * @param float      $price
+     * @param  int|string  $id
+     * @param  string  $name
+     * @param  float  $price
      */
     public function __construct($id = 1, $name = 'Item name', $price = 10.00)
     {

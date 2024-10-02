@@ -10,7 +10,6 @@ Run the Composer require command from the Terminal:
 
 	composer require azmolla/laravelcart
 
-
 ### Laravel <= 7.0
 
 Should you still be on version 7.0 of Laravel, the final steps for you are to add the service provider of the package and alias the package. To do this open your `config/app.php` file.
@@ -114,6 +113,35 @@ If you want to update more attributes of the item, you can either pass the updat
 Cart::update($rowId, ['name' => 'Product 1']); // Will update the name
 
 Cart::update($rowId, $product); // Will update the id, name and price
+
+```
+
+### CartItem::updateOption()
+
+To update a specific option of a cart item (like setting an item as free), you can use the `updateOption()` method. This method allows you to modify options without needing to update the entire item.
+
+#### Method Signature
+
+```php
+public function updateOption(string $optionKey, mixed $optionValue);
+```
+
+#### Example
+
+```php
+use Azmolla\Shoppingcart\Facades\Cart;
+
+$rowId = 'some-unique-row-id';
+$cartItem = Cart::get($rowId);
+
+if ($cartItem) {
+    // Update the 'make_free' option to true for this cart item
+    $cartItem->updateOption('is_free', true);
+
+    // Optionally, you can check the updated options
+    $updatedOptions = $cartItem->options->all();
+    print_r($updatedOptions); // This will show the updated options
+}
 
 ```
 

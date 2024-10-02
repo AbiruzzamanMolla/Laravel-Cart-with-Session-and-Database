@@ -1,6 +1,5 @@
 <?php
 
-
 namespace Azmolla\Shoppingcart\Contracts;
 
 interface InstanceIdentifier

@@ -10,8 +10,7 @@ trait CartAssertions
     /**
      * Assert that the cart contains the given number of items.
      *
-     * @param int|float                     $items
-     * @param \Azmolla\Shoppingcart\Cart $cart
+     * @param  int|float  $items
      */
     public function assertItemsInCart($items, Cart $cart)
     {
@@ -23,8 +22,7 @@ trait CartAssertions
     /**
      * Assert that the cart contains the given number of rows.
      *
-     * @param int                           $rows
-     * @param \Azmolla\Shoppingcart\Cart $cart
+     * @param  int  $rows
      */
     public function assertRowsInCart($rows, Cart $cart)
     {

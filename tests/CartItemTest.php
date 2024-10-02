@@ -2,16 +2,16 @@
 
 namespace Azmolla\Tests\Shoppingcart;
 
-use Orchestra\Testbench\TestCase;
 use Azmolla\Shoppingcart\CartItem;
 use Azmolla\Shoppingcart\ShoppingcartServiceProvider;
+use Orchestra\Testbench\TestCase;
 
 class CartItemTest extends TestCase
 {
     /**
      * Set the package service provider.
      *
-     * @param \Illuminate\Foundation\Application $app
+     * @param  \Illuminate\Foundation\Application  $app
      * @return array
      */
     protected function getPackageProviders($app)
@@ -33,7 +33,7 @@ class CartItemTest extends TestCase
             'qty' => 2,
             'options' => [
                 'size' => 'XL',
-                'color' => 'red'
+                'color' => 'red',
             ],
             'tax' => 0,
             'subtotal' => 20.00,
