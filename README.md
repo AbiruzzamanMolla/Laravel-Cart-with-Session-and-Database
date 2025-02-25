@@ -1,6 +1,33 @@
 ## LaravelShoppingcart
+[![Latest Version on Packagist](https://img.shields.io/packagist/v/Azmolla/laravelcart.svg?style=flat-square)](https://packagist.org/packages/azmolla/laravelcart)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
 
-A simple shopping cart implementation for Laravel 7, 8, 9, 10 & 11.
+azlaracart is a comprehensive and flexible shopping cart package for Laravel versions 7 through 12. It provides an easy-to-use API for managing shopping cart functionality within your Laravel applications. With support for multiple instances, database storage, and model associations, azlaracart simplifies the process of adding, updating, and removing items from the cart. It also includes built-in events and exceptions to help you handle various cart-related operations efficiently. Whether you need to manage a simple cart or a complex multi-instance cart system, azlaracart offers the tools and features to meet your needs.
+
+**Version:** v1.1.5
+
+## Features
+- Easy Installation: Quickly install via Composer.
+- Multiple Laravel Versions: Supports Laravel versions 7 through 12.
+- Multiple Instances: Manage multiple cart instances simultaneously.
+- Database Storage: Store and retrieve cart data from the database.
+- Model Associations: Associate cart items with Eloquent models.
+- Flexible API: Add, update, and remove items with ease.
+- Built-in Events: Listen for cart-related events.
+- Exception Handling: Handle various cart-related exceptions.
+- Dependency Injection: Inject the Cart class into controllers or other classes.
+- Additional Costs: Add and manage additional costs like shipping or transaction fees.
+- Tax Calculation: Automatically calculate tax for cart items.
+- Subtotal and Total Calculation: Get subtotal and total amounts for cart items.
+- Item Search: Search for items within the cart.
+- Cart Content Management: Retrieve and manage cart content.
+- Customizable Formatting: Customize number formatting for totals and subtotals.
+
+## Requirements
+
+-   `illuminate/support`: "^7.0|^8.0|^9.0|^10.0|^11.0|^12.0"
+-   `illuminate/session`: "^7.0|^8.0|^9.0|^10.0|^11.0|^12.0"
+-   `illuminate/events`: "^7.0|^8.0|^9.0|^10.0|^11.0|^12.0"
 
 ## Installation
 
@@ -8,8 +35,9 @@ Install the package through [Composer](http://getcomposer.org/).
 
 Run the Composer require command from the Terminal:
 
-	composer require azmolla/laravelcart
-
+```
+composer require azmolla/laravelcart
+```
 ### Laravel <= 7.0
 
 Should you still be on version 7.0 of Laravel, the final steps for you are to add the service provider of the package and alias the package. To do this open your `config/app.php` file.
@@ -368,7 +396,7 @@ foreach(Cart::content() as $row) {
 }
 ```
 
-By default model use find method to get the model instance, but if you want any custom field as relational condition then you can set a new value to the `options` array, named `model_field` where this will return the instance using where condition and the field name. 
+By default model use find method to get the model instance, but if you want any custom field as relational condition then you can set a new value to the `options` array, named `model_field` where this will return the instance using where condition and the field name.
 
 ```php
 $cartItem = Cart::add('201b84a2-e345-4b6f-934e-dc4d85567a21', 'Product 1', 1, 9.99, ['model_field' => 'uuid'])->associate(Product::class);

@@ -4,7 +4,7 @@
     "keywords": ["laravel", "shoppingcart", "cart", "php-cart", "php-laravel-cart", "az-lara-cart"],
     "homepage": "https://github.com/AbiruzzamanMolla/Laravel-Cart-with-Session-and-Database",
     "license": "MIT",
-    "version": "v1.1.4",
+    "version": "v1.1.5",
     "authors": [
         {
             "name": "Rob Gloudemans",
@@ -22,9 +22,9 @@
         }
     ],
     "require": {
-        "illuminate/support": "^7.0|^8.0|^9.0|^10.0|^11.0",
-        "illuminate/session": "^7.0|^8.0|^9.0|^10.0|^11.0",
-        "illuminate/events": "^7.0|^8.0|^9.0|^10.0|^11.0"
+        "illuminate/support": "^7.0|^8.0|^9.0|^10.0|^11.0|^12.0",
+        "illuminate/session": "^7.0|^8.0|^9.0|^10.0|^11.0|^12.0",
+        "illuminate/events": "^7.0|^8.0|^9.0|^10.0|^11.0|^12.0"
     },
     "require-dev": {
         "phpunit/phpunit": "^9.5|^10.1",
